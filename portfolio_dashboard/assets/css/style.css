@@ -1,0 +1,233 @@
+/* assets/css/style.css */
+:root {
+    --primary: #4361ee;
+    --primary-dark: #3a0ca3;
+    --sidebar-bg: #1e1e2d;
+    --sidebar-width: 250px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background: #f4f6fb;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ---------- Login page ---------- */
+.login-body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+.login-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 14px;
+    width: 380px;
+}
+.login-card i.bi-person-circle {
+    font-size: 42px;
+    color: var(--primary);
+}
+
+/* ---------- Layout ---------- */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+}
+.sidebar-brand {
+    padding: 22px 20px;
+    font-size: 18px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand i { color: var(--primary); margin-right: 8px; }
+.sidebar-menu {
+    list-style: none;
+    padding: 15px 0;
+    margin: 0;
+    flex: 1;
+}
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    color: #c5c7d1;
+    text-decoration: none;
+    font-size: 14.5px;
+    transition: 0.2s;
+}
+.sidebar-menu li a:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.sidebar-menu li.active a {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 0 25px 25px 0;
+}
+.sidebar-footer { padding: 18px 22px; border-top: 1px solid rgba(255,255,255,0.08); }
+.logout-link { color: #f87171; text-decoration: none; font-size: 14px; }
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 25px 30px;
+    width: calc(100% - var(--sidebar-width));
+}
+
+.topbar {
+    background: #fff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* ---------- Stat Cards ---------- */
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+}
+.stat-icon {
+    width: 54px; height: 54px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    color: #fff;
+}
+.stat-card h3 { margin: 0; font-weight: 700; }
+.stat-card p { margin: 0; color: #888; font-size: 13.5px; }
+
+/* ---------- Cards / panels ---------- */
+.panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 24px;
+}
+
+.profile-img-preview {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+}
+
+.skill-bar-bg {
+    height: 8px;
+    border-radius: 5px;
+    background: #eef0f7;
+}
+.skill-bar-fill {
+    height: 8px;
+    border-radius: 5px;
+    background: var(--primary);
+}
+
+.project-card img {
+    height: 160px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+.category-badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #eef0ff;
+    color: var(--primary);
+}
+
+/* Tablet: keep sidebar labels but tighten spacing */
+@media (max-width: 992px) and (min-width: 769px) {
+    .main-content { padding: 20px; }
+    .stat-card { padding: 16px; }
+}
+
+/* Mobile: icon-only sidebar, stacked layout */
+@media (max-width: 768px) {
+    .sidebar { width: 64px; }
+    .sidebar-brand span, .sidebar-menu li a span, .sidebar-footer span { display: none; }
+    .sidebar-brand { text-align: center; padding: 18px 0; }
+    .sidebar-menu li a { justify-content: center; padding: 14px 0; }
+    .main-content { margin-left: 64px; width: calc(100% - 64px); padding: 16px; }
+    .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .stat-card { flex-direction: column; text-align: center; gap: 8px; }
+    .login-card { width: 90%; padding: 28px; }
+}
+
+@media (max-width: 480px) {
+    .stat-card h3 { font-size: 22px; }
+    .panel { padding: 16px; }
+}
+
+/* ---------- Empty States (Week 6) ---------- */
+.empty-state i {
+    font-size: 42px;
+    color: #c9cce0;
+}
+.empty-state h6 { color: #555; font-weight: 600; }
+
+/* ---------- Hover / Motion Polish (Week 6) ---------- */
+.panel, .stat-card {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.stat-card:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+.project-card {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.project-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.09);
+    transform: translateY(-3px);
+}
+.project-card img { transition: transform 0.35s ease; }
+.project-card:hover img { transform: scale(1.04); }
+
+.btn { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+/* Sidebar menu items already transition; add a subtle icon nudge on hover */
+.sidebar-menu li a:hover i { transform: translateX(2px); }
+.sidebar-menu li a i { transition: transform 0.15s ease; display: inline-block; }
+
+/* Fade/slide-in for page content once loaded (see app.js: adds .is-visible) */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.fade-in-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Reduce motion for users who've asked for it */
+@media (prefers-reduced-motion: reduce) {
+    .panel, .stat-card, .project-card, .project-card img, .btn, .sidebar-menu li a i, .fade-in-up {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
