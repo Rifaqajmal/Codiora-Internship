@@ -6,10 +6,9 @@ A full-stack PHP/MySQL admin dashboard for managing a personal developer portfol
 
 ## 🔗 Live Deployment
 
-**Live site:** http://rifaqportfolio.gamer.free/login.php
-**Live public portfolio (no login):** http://rifaqportfolio.gamer.free/preview.php
+**Live public portfolio:** http://rifaqportfolio.gamer.free/preview.php
+**Admin login:** http://rifaqportfolio.gamer.free/login.php *(credentials not published — see Security Note below)*
 **Hosting:** InfinityFree (free PHP + MySQL hosting)
-**Default login:** `admin` / `admin123`
 
 ## Project Overview
 
@@ -73,8 +72,6 @@ Built entirely with **plain PHP, MySQL, and Bootstrap 5** — no frameworks — 
 - **Hosting:** InfinityFree (production), XAMPP (local development)
 
 ## Folder Structure
-
-```
 portfolio_dashboard/
 ├── index.php                  # Router: redirects to dashboard or login
 ├── login.php / logout.php
@@ -90,7 +87,7 @@ portfolio_dashboard/
 ├── migration_week6.sql         # social links, resume column, performance indexes
 ├── INTEGRATION_TESTING.md      # Test report
 ├── includes/
-│   ├── config.php              # Environment-based DB credentials
+│   ├── config.php              # Environment-based DB credentials (safe local fallback only — see Security Note)
 │   ├── db.php                  # DB connection (reads config.php)
 │   ├── auth.php                # Session/auth guard
 │   ├── head.php                # Shared <head> partial
@@ -102,39 +99,37 @@ portfolio_dashboard/
 │   ├── log_activity.php         # Activity logging (also triggers notifications)
 │   └── notifications.php        # Notification creation helper
 └── assets/
-    ├── css/style.css, css/preview.css
-    ├── js/app.js                # Loading spinner + scroll-reveal
-    ├── js/preview.js            # Project filter, contact form validation, scroll-reveal
-    ├── favicon.svg
-    └── uploads/
-```
+├── css/style.css, css/preview.css
+├── js/app.js                # Loading spinner + scroll-reveal
+├── js/preview.js            # Project filter, contact form validation, scroll-reveal
+├── favicon.svg
+└── uploads/
 
 ## Installation (Local — XAMPP)
 
 1. Copy the `portfolio_dashboard` folder into `htdocs`.
 2. Start Apache and MySQL in XAMPP.
 3. Import `database.sql` in phpMyAdmin, then `migration_week3.sql`, `migration_week4.sql`, then `migration_week6.sql`.
-4. Visit `http://localhost/portfolio_dashboard/setup.php` once to seed the admin user.
-5. Log in at `http://localhost/portfolio_dashboard/login.php` with `admin` / `admin123`.
+4. Visit `http://localhost/portfolio_dashboard/setup.php` once — this creates a default admin account (`admin` / `admin123`) for **local testing only**.
+5. Log in at `http://localhost/portfolio_dashboard/login.php`, then immediately go to **Profile → Change Password** and set your own password.
 6. **Delete `setup.php`** after first use.
 
 ## Deployment (Production — InfinityFree)
 
 1. Create a free hosting account and MySQL database on InfinityFree.
 2. Import your schema via phpMyAdmin (combine `database.sql` + all migrations, or use a single combined SQL file with the `CREATE DATABASE`/`USE` lines removed, since InfinityFree databases already exist and are pre-selected in phpMyAdmin).
-3. Update `includes/config.php` with your live MySQL host, username, password, and database name — get the exact values from InfinityFree's "MySQL Databases" panel, not the account password (they can differ).
+3. Update `includes/config.php` **on the live server only** with your live MySQL host, username, password, and database name — get the exact values from InfinityFree's "MySQL Databases" panel, not the account password (they can differ). **Never commit this version to GitHub.**
 4. Upload all project files directly into `htdocs` (not nested in a subfolder) via File Manager or FTP.
-5. Visit `yoursite.com/setup.php` once to seed the admin user, then delete it immediately.
+5. Visit `yoursite.com/setup.php` once to seed the admin user, **immediately change the password**, then delete `setup.php` from the server.
 6. Test all core flows (see `INTEGRATION_TESTING.md`).
+
+## 🔒 Security Note
+
+This repository is public. To keep the live deployment secure:
+- `includes/config.php` in this repo contains only safe local fallback values (`localhost` / `root` / empty password) — the real production credentials live only on the InfinityFree server itself and are never committed here.
+- The default `admin` / `admin123` login created by `setup.php` is meant to be **changed immediately** after first login, on any environment (local or live) you care about securing. It is intentionally **not listed here** to avoid publishing real, working credentials for a live, internet-accessible site.
+- `setup.php` should be deleted from any live server immediately after the first admin account is created.
 
 ## Screenshots
 
 See LinkedIn post and `INTEGRATION_TESTING.md` for testing screenshots covering: dashboard, notifications, profile/change password, project management, and the authentication redirect check.
-
-## Default Login
-
-| Username | Password |
-|----------|----------|
-| admin    | admin123 |
-
-*(Change this immediately via the Change Password feature after your first login on any environment you care about securing.)*
