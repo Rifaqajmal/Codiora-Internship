@@ -118,3 +118,110 @@
 All core modules — authentication, CRUD operations across Skills/Projects/Categories, dashboard analytics, notifications, image/file upload and cleanup, search/filtering, social links, resume download, and scroll animations — were tested on both the local XAMPP environment and the live InfinityFree deployment. No blocking issues were found. One environment-specific issue was identified and resolved during deployment (see note below).
 
 **Issue encountered during deployment:** Initial live-site testing returned HTTP 500 errors on all PHP pages. Root cause was isolated using a temporary diagnostic script, which revealed a MySQL access-denied error — the InfinityFree account password and the actual MySQL database password were different values, despite appearing identical in the hosting panel. Corrected `includes/config.php` with the verified MySQL password from the "MySQL Databases" panel resolved the issue immediately.
+
+## 8. Week 7 — Accessibility, Security & Final System Testing
+
+### Complete System Testing (End-to-End User Flow)
+
+| Test Case | Expected Result | Status |
+|---|---|---|
+| Login with valid credentials | Redirects to dashboard, session active | ✅ Pass |
+| Dashboard loads all panels | Stats, Recent Projects, Activities, Skills by Category, User Statistics all render | ✅ Pass |
+| Profile update (personal info) | Changes saved and reflected immediately | ✅ Pass |
+| Profile update (About section) | Changes saved and visible on public preview | ✅ Pass |
+| Add a new skill | Skill appears in list with correct proficiency bar | ✅ Pass |
+| Edit a skill | Updated values shown immediately | ✅ Pass |
+| Delete a skill | Skill removed after confirmation prompt | ✅ Pass |
+| Add a new project | Project card appears with image, category, status badge | ✅ Pass |
+| Edit a project | Updated details reflected on card and public preview | ✅ Pass |
+| Delete a project | Project removed, image deleted from disk | ✅ Pass |
+| Search projects | Results filtered correctly, URL params preserved | ✅ Pass |
+| Logout | Session destroyed, redirected to login | ✅ Pass |
+| Unauthorized route access | `dashboard.php` without session redirects to `login.php` | ✅ Pass |
+
+### Accessibility — Form Labels
+
+| Test Case | Expected Result | Status |
+|---|---|---|
+| `login.php` — username + password inputs | Each input has matching `<label for="">` | ✅ Pass |
+| `profile.php` — Personal Information form | All 8 fields (name, title, email, phone, location, LinkedIn, GitHub, Twitter) have `for`/`id` pairs | ✅ Pass |
+| `profile.php` — About textarea | `<label for="about_text">` present | ✅ Pass |
+| `profile.php` — Profile image file input | `<label for="profile_image_file">` present | ✅ Pass |
+| `profile.php` — Resume file input | `<label for="resume_file_input">` present | ✅ Pass |
+| `profile.php` — Change Password form | All 3 password fields have `for`/`id` pairs | ✅ Pass |
+| `skills.php` — Add Skill modal | Skill Name, Category, Proficiency all have `for`/`id` pairs | ✅ Pass |
+| `skills.php` — Edit Skill modal | All fields have `for`/`id` pairs | ✅ Pass |
+| `projects.php` — Search/filter form | All 4 filter fields have `for`/`id` pairs | ✅ Pass |
+| `projects.php` — Add Project modal | All 8 fields have `for`/`id` pairs | ✅ Pass |
+| `projects.php` — Edit Project modal | All fields have `for`/`id` pairs | ✅ Pass |
+| `projects.php` — Category management modal | Each inline category input has unique `for`/`id` | ✅ Pass |
+| `preview.php` — Contact form | Name, Email, Message all have `for`/`id` pairs | ✅ Pass |
+
+### Accessibility — ARIA & Semantics
+
+| Test Case | Expected Result | Status |
+|---|---|---|
+| Sidebar nav wrapped in `<nav>` | `<nav aria-label="Main navigation">` present | ✅ Pass |
+| Active sidebar link | `aria-current="page"` on current page link | ✅ Pass |
+| Notification bell button | `aria-label="Notifications (N unread)"` dynamically set | ✅ Pass |
+| Notification badge | `aria-hidden="true"` (count is already in button label) | ✅ Pass |
+| All decorative icons | `aria-hidden="true"` on all `<i class="bi ...">` icons | ✅ Pass |
+| Skill bars — admin pages | `role="progressbar"` with `aria-valuenow/min/max` and `aria-label` including % | ✅ Pass |
+| Skill bars — public preview | Same ARIA attributes present | ✅ Pass |
+| Icon-only buttons (edit, delete, view) | Each has descriptive `aria-label` e.g. "Edit PHP", "Delete MySQL" | ✅ Pass |
+| Project details modal image | `alt` attribute set dynamically via JS when modal opens | ✅ Pass |
+| Skip-to-content link | `<a href="#main-content">` present on `preview.php` | ✅ Pass |
+| Section landmarks on preview.php | All sections use `aria-labelledby` pointing to their heading | ✅ Pass |
+
+### Accessibility — Heading Hierarchy
+
+| Test Case | Expected Result | Status |
+|---|---|---|
+| `preview.php` — top-level heading | Single `<h1>` for full name | ✅ Pass |
+| `preview.php` — section headings | About, Skills, Projects, Contact use `<h2>` | ✅ Pass |
+| `preview.php` — skill category headings | Each category uses `<h3>` (was incorrectly `<h5>` before) | ✅ Pass |
+| `preview.php` — project card titles | Each project uses `<h3 class="h6">` | ✅ Pass |
+| Admin pages — panel headings | Consistent `<h5>` for panel titles throughout | ✅ Pass |
+
+### Security Checks
+
+| Test Case | Expected Result | Status |
+|---|---|---|
+| `login.php` default credentials hint | "Default: admin / admin123" text removed from page | ✅ Pass |
+| `README.md` credentials exposure | No working credentials anywhere in README | ✅ Pass |
+| Prepared statements | All SQL queries use `bind_param()` — verified across all files | ✅ Pass |
+| `htmlspecialchars()` on all output | No raw user data rendered to HTML | ✅ Pass |
+| File upload validation | Extension + size checked before `move_uploaded_file()` | ✅ Pass |
+| `setup.php` on live server | File absent from production server | ✅ Pass |
+
+### Meta Tags (preview.php)
+
+| Test Case | Expected Result | Status |
+|---|---|---|
+| Open Graph title + description | `og:title` and `og:description` tags present | ✅ Pass |
+| Open Graph image | `og:image` populated with profile image URL | ✅ Pass |
+| Twitter Card type | `twitter:card` = `summary_large_image` present | ✅ Pass |
+| Twitter title + description + image | All 3 Twitter Card tags populated | ✅ Pass |
+| Meta description | `<meta name="description">` present | ✅ Pass |
+
+### Responsive Testing
+
+| Device / Breakpoint | Test Area | Status |
+|---|---|---|
+| Mobile (375px) | Login page centered, full-width card | ✅ Pass |
+| Mobile (375px) | Admin sidebar collapses, topbar visible | ✅ Pass |
+| Mobile (375px) | Project cards stack to single column | ✅ Pass |
+| Mobile (375px) | Public portfolio hero, skills, projects readable | ✅ Pass |
+| Tablet (768px) | Project cards in 2-column grid | ✅ Pass |
+| Tablet (768px) | Profile page 2-column layout intact | ✅ Pass |
+| Laptop (1024px) | Full sidebar + main content layout | ✅ Pass |
+| Desktop (1440px) | No overflow, consistent spacing | ✅ Pass |
+
+---
+
+## Final Summary
+
+All features tested across 7 weeks — authentication, full CRUD (skills, projects, categories), dashboard analytics, notifications, file upload and cleanup, search and filtering, social links, resume download, scroll animations, and a complete accessibility pass — were verified on both the local XAMPP environment and the live InfinityFree deployment. No blocking issues found in Week 7 testing.
+
+**Total test cases:** 80+
+**Status:** All Pass ✅
