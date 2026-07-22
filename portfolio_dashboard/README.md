@@ -17,12 +17,90 @@ A full-stack PHP/MySQL admin dashboard for managing a personal developer portfol
 
 Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks — across 7 weeks of iterative development:
 
+- **Week 1** — Orientation & environment setup
 - **Week 2** — Admin dashboard: login, profile, skills CRUD, projects CRUD
 - **Week 3** — Mini CMS: activity log, public preview page, categories, pagination
 - **Week 4** — Notifications system, change password, auth hardening
 - **Week 5** — Production deployment, environment config, shared partials, flash messages
 - **Week 6** — File cleanup, empty states, social links, resume upload, scroll animations, DB indexes
-- **Week 7** — Accessibility audit, full form labelling, ARIA attributes, heading hierarchy, security cleanup
+- **Week 7** — Full accessibility audit, ARIA labels, form labelling, heading hierarchy, security cleanup
+
+## Week-by-Week Progress
+
+### Week 1 — Orientation & Environment Setup
+- Joined Codiora as a Full Stack Development intern
+- Installed and configured the local development environment:
+  - **XAMPP** (Apache + MySQL + PHP 8.3)
+  - **Visual Studio Code** with PHP and web development extensions
+  - **Git** for version control
+  - **Browser DevTools** for debugging and responsive testing
+- Learned the internship workflow, task submission process, and LinkedIn reporting requirements
+- Studied the tech stack: PHP (procedural), MySQL, Bootstrap 5, vanilla JavaScript
+- Set up the local project folder structure inside `htdocs`
+- Explored phpMyAdmin for database management
+
+### Week 2 — Foundation: Admin Dashboard
+- Built session-based login and logout (`password_hash` / `password_verify`)
+- Created the admin sidebar, topbar, and statistics cards layout
+- Built Profile Management: personal info, About section, profile image upload
+- Built Skills CRUD: add, edit, delete skills with proficiency percentage and category
+- Built Projects CRUD: add, edit, delete projects with image upload and status tracking
+- Implemented search and filter via GET parameters
+- Files introduced: `login.php`, `logout.php`, `dashboard.php`, `profile.php`, `skills.php`, `projects.php`, `setup.php`, `database.sql`, `includes/db.php`, `includes/auth.php`, `includes/sidebar.php`, `includes/header.php`, `assets/css/style.css`
+
+### Week 3 — Mini CMS
+- Added `activity_log` table and `includes/log_activity.php` to track all user actions
+- Built `preview.php` — a public-facing portfolio page (no login required) with client-side category filtering and a contact form
+- Added Recent Activities feed and User Statistics panel to the dashboard
+- Added `technology` field to projects and a project details modal
+- Built full Category CRUD for organizing projects
+- Implemented pagination (6 projects per page)
+- Improved responsive breakpoints for mobile and tablet
+- Files introduced: `includes/log_activity.php`, `preview.php`, `migration_week3.sql`
+
+### Week 4 — Production-Style Enhancements
+- Built a full Notifications system: `notifications` table, bell icon in the topbar with unread badge, dropdown list, and mark-all-as-read
+- Made `logActivity()` the single call site for both activity logging and notification creation
+- Added Change Password to `profile.php` (verifies current password, enforces 6+ character minimum, prevents reuse)
+- Added auth guard check on every protected page
+- Files introduced: `includes/notifications.php`, `notifications_read.php`, `migration_week4.sql`
+
+### Week 5 — Production Deployment & Optimization
+- Refactored to environment-variable-based DB config (`includes/config.php`) with local fallbacks
+- Created shared partials: `includes/head.php`, `includes/footer.php`, `includes/flash.php`
+- Added global loading spinner and scroll-reveal animations via `assets/js/app.js`
+- Added Open Graph and Twitter Card meta tags to `preview.php` for social link previews
+- Added branded SVG favicon
+- Deployed to **InfinityFree** live hosting: imported schema, uploaded files via File Manager
+- Fixed HTTP 500 bug caused by MySQL credentials mismatch between DB password and account password
+- Added 6 real projects and 5 skills to the live database
+- Files introduced: `includes/config.php`, `includes/head.php`, `includes/footer.php`, `includes/flash.php`, `assets/js/app.js`, `assets/favicon.svg`, `INTEGRATION_TESTING.md`, `README.md`
+
+### Week 6 — Final Polish & Production Hardening
+- Built `includes/file_helper.php` with `deleteUploadedFile()` — automatically removes old uploaded files from disk when replaced or when a project is deleted
+- Built reusable `includes/empty_state.php` partial for "no data yet" states across Dashboard, Skills, and Projects
+- Added social links (LinkedIn, GitHub, Twitter/X) to profile and rendered them as buttons on `preview.php`
+- Added resume upload (PDF) to profile — powers a Download Resume button on the live portfolio
+- Added scroll-reveal `fade-in-up` animations and hover/transition polish across admin and public pages
+- Added database indexes on frequently searched/filtered columns for faster queries
+- Fixed security issue: removed real admin credentials that had been accidentally published in `README.md`
+- Pushed full project to GitHub
+- Files introduced: `includes/file_helper.php`, `includes/empty_state.php`, `assets/js/preview.js`, `assets/css/preview.css`, `migration_week6.sql`
+
+### Week 7 — Final Testing, Accessibility & Documentation
+- Performed a complete accessibility audit across all pages:
+  - Added `for` attributes to every `<label>` and matching `id` to every input, select, and textarea
+  - Added `aria-label` to all icon-only buttons (edit, delete, view, notification bell)
+  - Added `role="progressbar"` with `aria-valuenow/min/max` and `aria-label` to all skill bars
+  - Wrapped sidebar navigation in `<nav aria-label="Main navigation">` with `aria-current="page"` on the active link
+  - Added `aria-hidden="true"` to all decorative icons throughout
+  - Fixed heading hierarchy on `preview.php` (h1 → h2 → h3 for skill categories)
+  - Added Twitter Card meta tags to `preview.php` (were missing despite being listed as done)
+  - Added descriptive `aria-label` to notification bell showing unread count dynamically
+  - Fixed project details modal to set image `alt` text dynamically via JavaScript
+- Removed remaining exposed default credentials from `login.php`
+- Updated `README.md` with full database design, CRUD reference, and deployment guide
+- Updated `INTEGRATION_TESTING.md` with Week 7 test results
 
 ## Features
 
@@ -42,7 +120,7 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 ### Profile Management
 - Update personal info (name, title, email, phone, location) and About section
 - Profile image upload — validated (JPG/PNG/WEBP, max 2MB), old image auto-deleted on replace
-- Resume upload (PDF, max 5MB) — powers the Download Resume button on the public portfolio
+- Resume upload (PDF, max 5MB) — powers the Download Resume button on the live portfolio
 - Social links: LinkedIn, GitHub, Twitter/X — rendered as buttons on the live preview
 
 ### Project & Skill Management
@@ -62,7 +140,7 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 - All form inputs have associated `<label for="">` attributes
 - ARIA roles: `role="progressbar"` on skill bars, `aria-label` on all icon-only buttons
 - Semantic navigation: `<nav aria-label="Main navigation">` with `aria-current="page"`
-- Notification bell button has dynamic `aria-label` showing unread count
+- Notification bell has dynamic `aria-label` showing unread count
 - Correct heading hierarchy on public portfolio (h1 → h2 → h3)
 - `aria-hidden="true"` on all decorative icons throughout
 
@@ -75,6 +153,8 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 | Frontend | Bootstrap 5.3, Bootstrap Icons 1.11, vanilla JavaScript |
 | Hosting (production) | InfinityFree |
 | Hosting (local) | XAMPP |
+| Editor | Visual Studio Code |
+| Version Control | Git + GitHub |
 
 ## Database Design
 
@@ -174,20 +254,20 @@ All operations are form-based (POST) with prepared statements. There are no REST
 | login.php | Authenticate | POST | Verifies bcrypt password, starts session |
 | profile.php | Update info | POST | Updates name, title, email, phone, location, social links |
 | profile.php | Update about | POST | Updates about_text |
-| profile.php | Upload image | POST (multipart) | Validates + moves file, deletes old |
-| profile.php | Upload resume | POST (multipart) | Validates PDF, deletes old |
-| profile.php | Change password | POST | Verifies current, hashes new |
+| profile.php | Upload image | POST multipart | Validates + moves file, deletes old |
+| profile.php | Upload resume | POST multipart | Validates PDF, deletes old |
+| profile.php | Change password | POST | Verifies current, hashes new with bcrypt |
 | skills.php | Add skill | POST | Inserts row, logs activity |
 | skills.php | Edit skill | POST | Updates row, logs activity |
 | skills.php | Delete skill | POST | Deletes row, logs activity |
-| projects.php | Add project | POST (multipart) | Inserts row + optional image |
-| projects.php | Edit project | POST (multipart) | Updates row, replaces image if provided |
+| projects.php | Add project | POST multipart | Inserts row + optional image upload |
+| projects.php | Edit project | POST multipart | Updates row, replaces image if provided |
 | projects.php | Delete project | POST | Deletes row + image file from disk |
 | projects.php | Add category | POST | Inserts category row |
 | projects.php | Edit category | POST | Updates category name |
 | projects.php | Delete category | POST | Deletes category (projects become Uncategorized) |
 | projects.php | Search/filter | GET | Filters by title, category, status, technology |
-| preview.php | View portfolio | GET | Public read-only, no auth |
+| preview.php | View portfolio | GET | Public read-only, no auth required |
 | notifications_read.php | Mark all read | GET | Sets is_read = 1 for all user notifications |
 
 ## Folder Structure
@@ -225,9 +305,9 @@ portfolio_dashboard/
     ├── css/style.css            # Admin dashboard styles
     ├── css/preview.css          # Public portfolio styles + animations
     ├── js/app.js                # Loading spinner + scroll-reveal (admin)
-    ├── js/preview.js            # Category filter, contact form validation, scroll-reveal
+    ├── js/preview.js            # Category filter, contact form, scroll-reveal (public)
     ├── favicon.svg
-    └── uploads/                 # User-uploaded images and PDFs (gitignored except .gitkeep)
+    └── uploads/                 # User-uploaded images and PDFs
 ```
 
 ## Installation Guide (Local — XAMPP)
@@ -239,19 +319,19 @@ portfolio_dashboard/
 5. Visit `http://localhost/portfolio_dashboard/setup.php` to seed the admin user.
 6. **Immediately delete `setup.php`** after the first visit.
 7. Log in at `http://localhost/portfolio_dashboard/login.php`.
-8. Change the default password via Profile → Change Password.
+8. Change the default password immediately via Profile → Change Password.
 
-> **For existing local databases:** Run `migration_week3.sql`, `migration_week4.sql`, and `migration_week6.sql` in order instead of re-importing `database.sql`.
+> **For existing local databases (upgrading):** Run `migration_week3.sql`, `migration_week4.sql`, and `migration_week6.sql` in order instead of re-importing `database.sql`.
 
 ## Deployment Guide (Production — InfinityFree)
 
 1. Create a free account at [infinityfree.com](https://infinityfree.com) and add a hosting account.
-2. In the hosting control panel, create a MySQL database and note the **host**, **database name**, **username**, and **password** (these are separate from your InfinityFree account password).
+2. In the control panel, create a MySQL database and note the **host**, **database name**, **username**, and **password** — these are separate from your InfinityFree account password.
 3. Open **phpMyAdmin** via the control panel, select your database, go to the SQL tab, and import `database.sql`.
-4. Edit `includes/config.php` on the server with your live MySQL credentials. **Do not commit this file with real credentials.**
+4. Edit `includes/config.php` on the server with your live MySQL credentials. **Never commit this file with real credentials.**
 5. Upload all project files to the `htdocs` folder via File Manager or FTP.
 6. Visit `yoursite.com/setup.php` once to create the admin user, then **delete setup.php immediately**.
-7. Log in and change the default password right away.
+7. Log in and change the default password right away via Profile → Change Password.
 8. Test all flows using `INTEGRATION_TESTING.md` as a checklist.
 
 ## 🔒 Security Notes
