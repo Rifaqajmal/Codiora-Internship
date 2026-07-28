@@ -2,12 +2,38 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ---- Section reveal on scroll (Week 6) ----
-    const revealTargets = document.querySelectorAll('.fade-in-up');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // ---- Dark / Light Mode (preview page) ----
+    var html = document.documentElement;
+    var toggleBtn  = document.getElementById('previewThemeToggle');
+    var toggleIcon = document.getElementById('previewThemeIcon');
+
+    function applyPreviewTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (toggleIcon) {
+            toggleIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+        }
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        }
+    }
+
+    var currentTheme = html.getAttribute('data-theme') || 'light';
+    applyPreviewTheme(currentTheme);
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+            var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyPreviewTheme(next);
+        });
+    }
+
+    // ---- Section reveal on scroll ----
+    var revealTargets = document.querySelectorAll('.fade-in-up');
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (revealTargets.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
-        const revealObserver = new IntersectionObserver(function (entries, observer) {
+        var revealObserver = new IntersectionObserver(function (entries, observer) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
@@ -21,50 +47,45 @@ document.addEventListener('DOMContentLoaded', function () {
         revealTargets.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
-    // ---- Project Filtering (no page reload) ----
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const projectItems = document.querySelectorAll('.project-item');
+    // ---- Project Filtering ----
+    var filterButtons = document.querySelectorAll('.filter-btn');
+    var projectItems  = document.querySelectorAll('.project-item');
 
-    filterButtons.forEach(btn => {
+    filterButtons.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            const category = this.getAttribute('data-category');
-
-            filterButtons.forEach(b => {
+            var category = this.getAttribute('data-category');
+            filterButtons.forEach(function (b) {
                 b.classList.remove('active');
                 b.setAttribute('aria-pressed', 'false');
             });
             this.classList.add('active');
             this.setAttribute('aria-pressed', 'true');
-
-            projectItems.forEach(item => {
-                const itemCategory = item.getAttribute('data-category');
-                if (category === '' || itemCategory === category) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
+            projectItems.forEach(function (item) {
+                var itemCategory = item.getAttribute('data-category');
+                item.style.display = (category === '' || itemCategory === category) ? '' : 'none';
             });
         });
-
-        // Keyboard accessibility: Enter/Space already trigger click on <button> natively.
     });
 
-    // ---- Contact Form Validation ----
-    const form = document.getElementById('contactForm');
-    const successMsg = document.getElementById('formSuccess');
+    // ---- Contact Form — real AJAX submission ----
+    var form        = document.getElementById('contactForm');
+    var successMsg  = document.getElementById('formSuccess');
+    var errorMsg    = document.getElementById('formError');
+    var submitBtn   = document.getElementById('contactSubmitBtn');
+    var btnText     = document.getElementById('contactBtnText');
+    var btnSpinner  = document.getElementById('contactBtnSpinner');
 
     if (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const name = document.getElementById('contact_name');
-            const email = document.getElementById('contact_email');
-            const message = document.getElementById('contact_message');
+            var name    = document.getElementById('contact_name');
+            var email   = document.getElementById('contact_email');
+            var message = document.getElementById('contact_message');
+            var isValid = true;
 
-            let isValid = true;
-
-            // Required field checks
-            [name, message].forEach(field => {
+            // Client-side validation
+            [name, message].forEach(function (field) {
                 if (field.value.trim() === '') {
                     field.classList.add('is-invalid');
                     isValid = false;
@@ -73,8 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            // Email validation (format check)
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(email.value.trim())) {
                 email.classList.add('is-invalid');
                 isValid = false;
@@ -82,18 +102,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 email.classList.remove('is-invalid');
             }
 
-            if (isValid) {
-                successMsg.style.display = 'block';
-                form.reset();
-                // Move focus to success message for screen reader users
-                successMsg.setAttribute('tabindex', '-1');
-                successMsg.focus();
-            } else {
+            if (!isValid) {
                 successMsg.style.display = 'none';
-                // Focus the first invalid field
-                const firstInvalid = form.querySelector('.is-invalid');
+                errorMsg.style.display   = 'none';
+                var firstInvalid = form.querySelector('.is-invalid');
                 if (firstInvalid) firstInvalid.focus();
+                return;
             }
+
+            // Show spinner
+            submitBtn.disabled    = true;
+            btnText.textContent   = 'Sending...';
+            btnSpinner.style.display = 'inline-block';
+            successMsg.style.display = 'none';
+            errorMsg.style.display   = 'none';
+
+            // AJAX POST to contact_submit.php
+            var formData = new FormData(form);
+            fetch('contact_submit.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                submitBtn.disabled       = false;
+                btnText.textContent      = 'Send Message';
+                btnSpinner.style.display = 'none';
+
+                if (data.success) {
+                    successMsg.textContent   = data.message;
+                    successMsg.style.display = 'block';
+                    errorMsg.style.display   = 'none';
+                    form.reset();
+                    successMsg.focus();
+                } else {
+                    errorMsg.textContent   = data.message;
+                    errorMsg.style.display = 'block';
+                    successMsg.style.display = 'none';
+                    errorMsg.focus();
+                }
+            })
+            .catch(function () {
+                submitBtn.disabled       = false;
+                btnText.textContent      = 'Send Message';
+                btnSpinner.style.display = 'none';
+                errorMsg.textContent     = 'Network error. Please try again.';
+                errorMsg.style.display   = 'block';
+                errorMsg.focus();
+            });
         });
     }
 });
