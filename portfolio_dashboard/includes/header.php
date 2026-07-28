@@ -17,16 +17,25 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
 <div class="topbar">
     <h4 class="mb-0"><?php echo htmlspecialchars($pageTitle); ?></h4>
     <div class="topbar-right d-flex align-items-center">
+
+        <!-- Dark / Light Mode Toggle -->
+        <button id="themeToggle" class="btn btn-light me-3 theme-toggle-btn" type="button"
+                aria-label="Toggle dark mode" title="Toggle dark/light mode">
+            <i class="bi bi-moon-fill" id="themeIcon" aria-hidden="true"></i>
+        </button>
+
         <div class="dropdown me-3">
-            <button class="btn btn-light position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-bell"></i>
+            <button class="btn btn-light position-relative" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false"
+                    aria-label="Notifications<?php echo $unreadCount > 0 ? " ($unreadCount unread)" : ''; ?>">
+                <i class="bi bi-bell" aria-hidden="true"></i>
                 <?php if ($unreadCount > 0): ?>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" aria-hidden="true">
                         <?php echo $unreadCount; ?>
                     </span>
                 <?php endif; ?>
             </button>
-            <div class="dropdown-menu dropdown-menu-end p-0" style="width:320px;max-height:400px;overflow-y:auto;">
+            <div class="dropdown-menu dropdown-menu-end p-0" style="width:320px;max-height:400px;overflow-y:auto;" role="menu" aria-label="Notifications list">
                 <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
                     <strong>Notifications</strong>
                     <?php if ($unreadCount > 0): ?>
@@ -46,7 +55,7 @@ if (isset($conn) && isset($_SESSION['user_id'])) {
             </div>
         </div>
         <span class="me-3 text-muted">
-            <i class="bi bi-person-fill"></i> <?php echo htmlspecialchars($_SESSION['username']); ?>
+            <i class="bi bi-person-fill" aria-hidden="true"></i> <?php echo htmlspecialchars($_SESSION['username']); ?>
         </span>
     </div>
 </div>

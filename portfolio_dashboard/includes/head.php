@@ -9,7 +9,7 @@ $extraCss = $extraCss ?? [];
 $bodyClass = $bodyClass ?? '';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,5 +21,12 @@ $bodyClass = $bodyClass ?? '';
     <?php foreach ($extraCss as $cssFile): ?>
     <link rel="stylesheet" href="<?php echo htmlspecialchars($cssFile); ?>">
     <?php endforeach; ?>
+    <!-- Anti-flash: apply saved theme before paint -->
+    <script>
+    (function () {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+    </script>
 </head>
 <body class="<?php echo htmlspecialchars($bodyClass); ?>">
