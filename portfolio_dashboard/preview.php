@@ -1,12 +1,9 @@
 <?php
 // preview.php - Public-facing live portfolio page.
 // No auth required: this is what a visitor/recruiter would see.
-// Always pulls fresh data directly from the database, so dashboard changes show immediately.
 
 require_once 'includes/db.php';
 
-// For a single-admin portfolio, show user_id = 1's data.
-// (If you add multi-user support later, pass ?user=ID in the query string.)
 $userId = (int) ($_GET['user'] ?? 1);
 
 $profile = $conn->query("SELECT * FROM profile WHERE user_id = $userId")->fetch_assoc();
@@ -22,7 +19,6 @@ while ($s = $skills->fetch_assoc()) {
     $skillsByCategory[$s['category']][] = $s;
 }
 
-// Filters for projects (GET, no page reload via JS for category, but works without JS too)
 $filterCategory = trim($_GET['pcategory'] ?? '');
 $projQuery = "SELECT p.*, c.category_name FROM projects p LEFT JOIN categories c ON p.category_id = c.id WHERE p.user_id = ?";
 $projParams = [$userId];
@@ -56,7 +52,7 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
     : 'https://ui-avatars.com/api/?name=' . urlencode($profile['full_name']) . '&size=200';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,25 +60,44 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
     <meta name="description" content="<?php echo htmlspecialchars(mb_strimwidth($profile['about_text'], 0, 150, '...')); ?>">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 
-    <!-- Open Graph tags for link previews on LinkedIn, WhatsApp, etc. -->
+    <!-- Open Graph tags -->
     <meta property="og:title" content="<?php echo htmlspecialchars($profile['full_name']); ?> - Portfolio">
     <meta property="og:description" content="<?php echo htmlspecialchars(mb_strimwidth($profile['about_text'], 0, 150, '...')); ?>">
     <meta property="og:type" content="website">
     <meta property="og:image" content="<?php echo htmlspecialchars($profileImgSrc); ?>">
 
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo htmlspecialchars($profile['full_name']); ?> - Portfolio">
+    <meta name="twitter:description" content="<?php echo htmlspecialchars(mb_strimwidth($profile['about_text'], 0, 150, '...')); ?>">
+    <meta name="twitter:image" content="<?php echo htmlspecialchars($profileImgSrc); ?>">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/preview.css">
+    <!-- Anti-flash dark mode -->
+    <script>
+    (function () {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+    </script>
 </head>
 <body>
+<!-- Dark/Light Mode floating toggle -->
+<button id="previewThemeToggle" class="dark-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+    <i class="bi bi-moon-fill" id="previewThemeIcon" aria-hidden="true"></i>
+</button>
 
-<!-- Skip link for keyboard/screen-reader users (accessibility) -->
+<!-- Skip link for keyboard/screen-reader users -->
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <!-- Hero / About -->
 <header class="hero" role="banner">
     <div class="container text-center">
-        <img src="<?php echo htmlspecialchars($profileImgSrc); ?>" alt="Photo of <?php echo htmlspecialchars($profile['full_name']); ?>" class="hero-img mb-3" loading="lazy">
+        <img src="<?php echo htmlspecialchars($profileImgSrc); ?>"
+             alt="Photo of <?php echo htmlspecialchars($profile['full_name']); ?>"
+             class="hero-img mb-3" loading="lazy">
         <h1><?php echo htmlspecialchars($profile['full_name']); ?></h1>
         <p class="lead"><?php echo htmlspecialchars($profile['job_title']); ?></p>
         <p class="text-muted">
@@ -90,32 +105,42 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
         </p>
         <nav aria-label="Contact links" class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
             <?php if ($profile['email']): ?>
-                <a href="mailto:<?php echo htmlspecialchars($profile['email']); ?>" class="btn btn-outline-light btn-sm" aria-label="Email <?php echo htmlspecialchars($profile['full_name']); ?>">
+                <a href="mailto:<?php echo htmlspecialchars($profile['email']); ?>" class="btn btn-outline-light btn-sm"
+                   aria-label="Email <?php echo htmlspecialchars($profile['full_name']); ?>">
                     <i class="bi bi-envelope" aria-hidden="true"></i> Email
                 </a>
             <?php endif; ?>
             <?php if ($profile['phone']): ?>
-                <a href="tel:<?php echo htmlspecialchars($profile['phone']); ?>" class="btn btn-outline-light btn-sm" aria-label="Call <?php echo htmlspecialchars($profile['full_name']); ?>">
+                <a href="tel:<?php echo htmlspecialchars($profile['phone']); ?>" class="btn btn-outline-light btn-sm"
+                   aria-label="Call <?php echo htmlspecialchars($profile['full_name']); ?>">
                     <i class="bi bi-telephone" aria-hidden="true"></i> Call
                 </a>
             <?php endif; ?>
             <?php if (!empty($profile['linkedin_url'])): ?>
-                <a href="<?php echo htmlspecialchars($profile['linkedin_url']); ?>" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm" aria-label="LinkedIn profile of <?php echo htmlspecialchars($profile['full_name']); ?>">
+                <a href="<?php echo htmlspecialchars($profile['linkedin_url']); ?>" target="_blank" rel="noopener"
+                   class="btn btn-outline-light btn-sm"
+                   aria-label="LinkedIn profile of <?php echo htmlspecialchars($profile['full_name']); ?>">
                     <i class="bi bi-linkedin" aria-hidden="true"></i> LinkedIn
                 </a>
             <?php endif; ?>
             <?php if (!empty($profile['github_url'])): ?>
-                <a href="<?php echo htmlspecialchars($profile['github_url']); ?>" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm" aria-label="GitHub profile of <?php echo htmlspecialchars($profile['full_name']); ?>">
+                <a href="<?php echo htmlspecialchars($profile['github_url']); ?>" target="_blank" rel="noopener"
+                   class="btn btn-outline-light btn-sm"
+                   aria-label="GitHub profile of <?php echo htmlspecialchars($profile['full_name']); ?>">
                     <i class="bi bi-github" aria-hidden="true"></i> GitHub
                 </a>
             <?php endif; ?>
             <?php if (!empty($profile['twitter_url'])): ?>
-                <a href="<?php echo htmlspecialchars($profile['twitter_url']); ?>" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm" aria-label="Twitter/X profile of <?php echo htmlspecialchars($profile['full_name']); ?>">
+                <a href="<?php echo htmlspecialchars($profile['twitter_url']); ?>" target="_blank" rel="noopener"
+                   class="btn btn-outline-light btn-sm"
+                   aria-label="Twitter/X profile of <?php echo htmlspecialchars($profile['full_name']); ?>">
                     <i class="bi bi-twitter-x" aria-hidden="true"></i> Twitter
                 </a>
             <?php endif; ?>
             <?php if (!empty($profile['resume_file']) && file_exists('assets/uploads/' . $profile['resume_file'])): ?>
-                <a href="assets/uploads/<?php echo htmlspecialchars($profile['resume_file']); ?>" download class="btn btn-light btn-sm" aria-label="Download resume of <?php echo htmlspecialchars($profile['full_name']); ?>">
+                <a href="assets/uploads/<?php echo htmlspecialchars($profile['resume_file']); ?>" download
+                   class="btn btn-light btn-sm"
+                   aria-label="Download resume of <?php echo htmlspecialchars($profile['full_name']); ?>">
                     <i class="bi bi-download" aria-hidden="true"></i> Download Resume
                 </a>
             <?php endif; ?>
@@ -142,14 +167,19 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
                 <div class="row g-4">
                     <?php foreach ($skillsByCategory as $category => $skillList): ?>
                         <div class="col-md-6">
-                            <h5><?php echo htmlspecialchars($category); ?></h5>
+                            <h3 class="h5"><?php echo htmlspecialchars($category); ?></h3>
                             <?php foreach ($skillList as $sk): ?>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
                                         <span><?php echo htmlspecialchars($sk['skill_name']); ?></span>
                                         <span class="text-muted small"><?php echo $sk['proficiency']; ?>%</span>
                                     </div>
-                                    <div class="skill-bar-bg" role="progressbar" aria-valuenow="<?php echo $sk['proficiency']; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo htmlspecialchars($sk['skill_name']); ?> proficiency">
+                                    <div class="skill-bar-bg"
+                                         role="progressbar"
+                                         aria-valuenow="<?php echo $sk['proficiency']; ?>"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"
+                                         aria-label="<?php echo htmlspecialchars($sk['skill_name']); ?> proficiency: <?php echo $sk['proficiency']; ?>%">
                                         <div class="skill-bar-fill" style="width: <?php echo $sk['proficiency']; ?>%;"></div>
                                     </div>
                                 </div>
@@ -166,7 +196,6 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
         <div class="container">
             <h2 id="projects-heading">Projects</h2>
 
-            <!-- Category filter (no page reload needed thanks to JS below; works without JS too via GET) -->
             <div class="filter-bar mb-4" role="group" aria-label="Filter projects by category">
                 <button class="filter-btn active" data-category="" aria-pressed="true">All</button>
                 <?php foreach ($categoryNames as $cat): ?>
@@ -188,7 +217,9 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
                     ?>
                     <div class="col-md-4 project-item" data-category="<?php echo htmlspecialchars($p['category_name'] ?? ''); ?>">
                         <article class="project-card-public h-100">
-                            <img src="<?php echo htmlspecialchars($pImgSrc); ?>" alt="Screenshot of <?php echo htmlspecialchars($p['title']); ?>" loading="lazy">
+                            <img src="<?php echo htmlspecialchars($pImgSrc); ?>"
+                                 alt="Screenshot of <?php echo htmlspecialchars($p['title']); ?>"
+                                 loading="lazy">
                             <div class="p-3">
                                 <h3 class="h6"><?php echo htmlspecialchars($p['title']); ?></h3>
                                 <p class="small text-muted"><?php echo htmlspecialchars(mb_strimwidth($p['description'], 0, 100, '...')); ?></p>
@@ -201,10 +232,14 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
                                 <?php endif; ?>
                                 <div class="d-flex gap-2">
                                     <?php if ($p['project_link']): ?>
-                                        <a href="<?php echo htmlspecialchars($p['project_link']); ?>" target="_blank" rel="noopener" class="btn btn-sm btn-primary" aria-label="View live demo of <?php echo htmlspecialchars($p['title']); ?>">Live</a>
+                                        <a href="<?php echo htmlspecialchars($p['project_link']); ?>" target="_blank" rel="noopener"
+                                           class="btn btn-sm btn-primary"
+                                           aria-label="View live demo of <?php echo htmlspecialchars($p['title']); ?>">Live</a>
                                     <?php endif; ?>
                                     <?php if ($p['github_link']): ?>
-                                        <a href="<?php echo htmlspecialchars($p['github_link']); ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-dark" aria-label="View source code of <?php echo htmlspecialchars($p['title']); ?> on GitHub">GitHub</a>
+                                        <a href="<?php echo htmlspecialchars($p['github_link']); ?>" target="_blank" rel="noopener"
+                                           class="btn btn-sm btn-outline-dark"
+                                           aria-label="View source code of <?php echo htmlspecialchars($p['title']); ?> on GitHub">GitHub</a>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -219,10 +254,10 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
     <section class="section bg-light fade-in-up" aria-labelledby="contact-heading">
         <div class="container" style="max-width:600px;">
             <h2 id="contact-heading">Get In Touch</h2>
-            <form id="contactForm" novalidate>
+            <form id="contactForm" novalidate data-no-loader>
                 <div class="mb-3">
                     <label for="contact_name" class="form-label">Name <span aria-hidden="true">*</span></label>
-                    <input type="text" id="contact_name" name="name" class="form-control" required aria-required="true">
+                    <input type="text" id="contact_name" name="name" class="form-control" required aria-required="true" maxlength="100">
                     <div class="invalid-feedback">Please enter your name.</div>
                 </div>
                 <div class="mb-3">
@@ -232,13 +267,15 @@ $profileImgSrc = ($profile['profile_image'] !== 'default.png' && file_exists($im
                 </div>
                 <div class="mb-3">
                     <label for="contact_message" class="form-label">Message <span aria-hidden="true">*</span></label>
-                    <textarea id="contact_message" name="message" rows="4" class="form-control" required aria-required="true"></textarea>
+                    <textarea id="contact_message" name="message" rows="4" class="form-control" required aria-required="true" maxlength="3000"></textarea>
                     <div class="invalid-feedback">Please enter a message.</div>
                 </div>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-                <div id="formSuccess" class="alert alert-success mt-3" role="status" style="display:none;">
-                    Thanks! Your message has been noted (demo form — not yet wired to email delivery).
-                </div>
+                <button type="submit" id="contactSubmitBtn" class="btn btn-primary">
+                    <span id="contactBtnText">Send Message</span>
+                    <span id="contactBtnSpinner" class="spinner-border spinner-border-sm ms-2" style="display:none;" role="status" aria-hidden="true"></span>
+                </button>
+                <div id="formSuccess" class="alert alert-success mt-3" role="status" style="display:none;" tabindex="-1"></div>
+                <div id="formError"   class="alert alert-danger  mt-3" role="alert"  style="display:none;" tabindex="-1"></div>
             </form>
         </div>
     </section>
