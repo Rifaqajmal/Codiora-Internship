@@ -1,8 +1,8 @@
 # Portfolio Management Dashboard
 
-Codiora Full Stack Development Internship — 7-week project.
+Codiora Full Stack Development Internship — 8-week project (Complete).
 
-A full-stack PHP/MySQL admin dashboard for managing a personal developer portfolio — skills, projects, profile, and a public live preview page — built iteratively over 7 weeks and deployed to production.
+A full-stack PHP/MySQL admin dashboard for managing a personal developer portfolio — skills, projects, profile, messages inbox, and a public live preview page — built iteratively over 8 weeks and deployed to production.
 
 ## 🔗 Live Demo
 
@@ -15,7 +15,7 @@ A full-stack PHP/MySQL admin dashboard for managing a personal developer portfol
 
 ## Project Overview
 
-Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks — across 7 weeks of iterative development:
+Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks — across 8 weeks of iterative development:
 
 - **Week 1** — Orientation & environment setup
 - **Week 2** — Admin dashboard: login, profile, skills CRUD, projects CRUD
@@ -24,83 +24,59 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 - **Week 5** — Production deployment, environment config, shared partials, flash messages
 - **Week 6** — File cleanup, empty states, social links, resume upload, scroll animations, DB indexes
 - **Week 7** — Full accessibility audit, ARIA labels, form labelling, heading hierarchy, security cleanup
+- **Week 8** — Final upgrade: dark/light mode, Chart.js analytics, messages inbox, profile completeness bar, full visual redesign
 
 ## Week-by-Week Progress
 
 ### Week 1 — Orientation & Environment Setup
-- Joined Codiora as a Full Stack Development intern
-- Installed and configured the local development environment:
-  - **XAMPP** (Apache + MySQL + PHP 8.3)
-  - **Visual Studio Code** with PHP and web development extensions
-  - **Git** for version control
-  - **Browser DevTools** for debugging and responsive testing
-- Learned the internship workflow, task submission process, and LinkedIn reporting requirements
+- Installed and configured XAMPP, VS Code, Git
 - Studied the tech stack: PHP (procedural), MySQL, Bootstrap 5, vanilla JavaScript
-- Set up the local project folder structure inside `htdocs`
-- Explored phpMyAdmin for database management
+- Set up local project folder inside `htdocs` and explored phpMyAdmin
 
 ### Week 2 — Foundation: Admin Dashboard
-- Built session-based login and logout (`password_hash` / `password_verify`)
-- Created the admin sidebar, topbar, and statistics cards layout
-- Built Profile Management: personal info, About section, profile image upload
-- Built Skills CRUD: add, edit, delete skills with proficiency percentage and category
-- Built Projects CRUD: add, edit, delete projects with image upload and status tracking
-- Implemented search and filter via GET parameters
-- Files introduced: `login.php`, `logout.php`, `dashboard.php`, `profile.php`, `skills.php`, `projects.php`, `setup.php`, `database.sql`, `includes/db.php`, `includes/auth.php`, `includes/sidebar.php`, `includes/header.php`, `assets/css/style.css`
+- Session-based login/logout (`password_hash` / `password_verify`)
+- Admin sidebar, topbar, statistics cards
+- Profile Management: personal info, About section, profile image upload
+- Skills CRUD and Projects CRUD with search and filter
 
 ### Week 3 — Mini CMS
-- Added `activity_log` table and `includes/log_activity.php` to track all user actions
-- Built `preview.php` — a public-facing portfolio page (no login required) with client-side category filtering and a contact form
-- Added Recent Activities feed and User Statistics panel to the dashboard
-- Added `technology` field to projects and a project details modal
-- Built full Category CRUD for organizing projects
-- Implemented pagination (6 projects per page)
-- Improved responsive breakpoints for mobile and tablet
-- Files introduced: `includes/log_activity.php`, `preview.php`, `migration_week3.sql`
+- `activity_log` table and activity tracking
+- `preview.php` — public portfolio page with category filtering and contact form
+- Recent Activities feed, User Statistics panel on dashboard
+- Full Category CRUD, pagination (6 per page)
 
 ### Week 4 — Production-Style Enhancements
-- Built a full Notifications system: `notifications` table, bell icon in the topbar with unread badge, dropdown list, and mark-all-as-read
-- Made `logActivity()` the single call site for both activity logging and notification creation
-- Added Change Password to `profile.php` (verifies current password, enforces 6+ character minimum, prevents reuse)
-- Added auth guard check on every protected page
-- Files introduced: `includes/notifications.php`, `notifications_read.php`, `migration_week4.sql`
+- Full Notifications system with bell icon, unread badge, dropdown
+- `logActivity()` as single call site for activity log + notifications
+- Change Password in profile with current-password verification
 
 ### Week 5 — Production Deployment & Optimization
-- Refactored to environment-variable-based DB config (`includes/config.php`) with local fallbacks
-- Created shared partials: `includes/head.php`, `includes/footer.php`, `includes/flash.php`
-- Added global loading spinner and scroll-reveal animations via `assets/js/app.js`
-- Added Open Graph and Twitter Card meta tags to `preview.php` for social link previews
-- Added branded SVG favicon
-- Deployed to **InfinityFree** live hosting: imported schema, uploaded files via File Manager
-- Fixed HTTP 500 bug caused by MySQL credentials mismatch between DB password and account password
-- Added 6 real projects and 5 skills to the live database
-- Files introduced: `includes/config.php`, `includes/head.php`, `includes/footer.php`, `includes/flash.php`, `assets/js/app.js`, `assets/favicon.svg`, `INTEGRATION_TESTING.md`, `README.md`
+- Environment-variable-based DB config (`includes/config.php`)
+- Shared partials: `head.php`, `footer.php`, `flash.php`
+- Global loading spinner and scroll-reveal animations
+- Deployed to InfinityFree live hosting
 
 ### Week 6 — Final Polish & Production Hardening
-- Built `includes/file_helper.php` with `deleteUploadedFile()` — automatically removes old uploaded files from disk when replaced or when a project is deleted
-- Built reusable `includes/empty_state.php` partial for "no data yet" states across Dashboard, Skills, and Projects
-- Added social links (LinkedIn, GitHub, Twitter/X) to profile and rendered them as buttons on `preview.php`
-- Added resume upload (PDF) to profile — powers a Download Resume button on the live portfolio
-- Added scroll-reveal `fade-in-up` animations and hover/transition polish across admin and public pages
-- Added database indexes on frequently searched/filtered columns for faster queries
-- Fixed security issue: removed real admin credentials that had been accidentally published in `README.md`
-- Pushed full project to GitHub
-- Files introduced: `includes/file_helper.php`, `includes/empty_state.php`, `assets/js/preview.js`, `assets/css/preview.css`, `migration_week6.sql`
+- `deleteUploadedFile()` for safe file cleanup on replace/delete
+- Reusable `empty_state.php` partial
+- Social links (LinkedIn, GitHub, Twitter/X) on profile + preview
+- Resume PDF upload with Download Resume button on public portfolio
+- DB indexes for performance
 
 ### Week 7 — Final Testing, Accessibility & Documentation
-- Performed a complete accessibility audit across all pages:
-  - Added `for` attributes to every `<label>` and matching `id` to every input, select, and textarea
-  - Added `aria-label` to all icon-only buttons (edit, delete, view, notification bell)
-  - Added `role="progressbar"` with `aria-valuenow/min/max` and `aria-label` to all skill bars
-  - Wrapped sidebar navigation in `<nav aria-label="Main navigation">` with `aria-current="page"` on the active link
-  - Added `aria-hidden="true"` to all decorative icons throughout
-  - Fixed heading hierarchy on `preview.php` (h1 → h2 → h3 for skill categories)
-  - Added Twitter Card meta tags to `preview.php` (were missing despite being listed as done)
-  - Added descriptive `aria-label` to notification bell showing unread count dynamically
-  - Fixed project details modal to set image `alt` text dynamically via JavaScript
-- Removed remaining exposed default credentials from `login.php`
-- Updated `README.md` with full database design, CRUD reference, and deployment guide
-- Updated `INTEGRATION_TESTING.md` with Week 7 test results
+- Full accessibility audit: `<label for="">`, `aria-label`, `role="progressbar"`, `aria-current`
+- Semantic `<nav>` with `aria-label="Main navigation"`
+- Correct heading hierarchy on preview.php
+- Security cleanup: removed exposed credentials from login.php
+- Full README and INTEGRATION_TESTING.md update
+
+### Week 8 — Final Project: Portfolio Management System (COMPLETE)
+- **Dark / Light Mode** — toggle button on all pages, preference saved to localStorage, anti-flash script, CSS variable token system
+- **Chart.js Analytics Dashboard** — doughnut chart (Projects by Status) + horizontal bar chart (Skills Proficiency), auto-updates on theme toggle
+- **Messages Inbox** — real contact form on preview.php submits via AJAX to `contact_submit.php`, stores in `messages` DB table, admin inbox with unread badge, mark-as-read, delete, pagination
+- **Profile Completeness Bar** — 10-field progress bar with color (red/yellow/green), checklist, and "Complete Your Profile" CTA
+- **Full Visual Redesign** — Inter Google Font, glassmorphism login page, gradient sidebar, gradient stat card icons, richer dark mode colors, custom scrollbar, animated project card overlays, sticky blurred navbar on public portfolio
+- **migration_week8.sql** — `messages` table added
 
 ## Features
 
@@ -109,40 +85,50 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 - Change password with current-password verification and reuse prevention
 - Every protected route guarded via `includes/auth.php`
 - Environment-variable-based DB credentials — no real credentials in version control
-- Public preview page intentionally requires no login
 
-### Dashboard
+### Dashboard (Week 8 Enhanced)
 - Live statistics: Total Skills, Total Projects, Categories, Completed Projects
+- **Chart.js doughnut** — Projects by Status breakdown
+- **Chart.js horizontal bar** — Skills Proficiency chart
 - Recent Projects table and Recent Activities feed
+- **Profile Completeness bar** — 10-field tracker with color-coded progress
 - User Statistics panel (account age, total logins, last login)
-- Real-time notification bell with unread badge, auto-generated from every tracked action
+
+### Dark / Light Mode (Week 8)
+- Toggle button in admin topbar and floating button on public portfolio
+- CSS variable token system (`--bg`, `--panel-bg`, `--text`, etc.)
+- Anti-flash script in `<head>` reads localStorage before first paint
+- Charts re-render colors on theme change
+- Preference persists across all pages and sessions
+
+### Messages Inbox (Week 8)
+- Contact form on `preview.php` submits via AJAX (no page reload)
+- Spinner + success/error feedback on form submission
+- Messages stored in `messages` DB table
+- Admin inbox at `messages.php` with unread count badge in sidebar
+- Mark as read, mark all as read, delete with confirm
 
 ### Profile Management
-- Update personal info (name, title, email, phone, location) and About section
-- Profile image upload — validated (JPG/PNG/WEBP, max 2MB), old image auto-deleted on replace
-- Resume upload (PDF, max 5MB) — powers the Download Resume button on the live portfolio
-- Social links: LinkedIn, GitHub, Twitter/X — rendered as buttons on the live preview
+- Update personal info, About section, social links (LinkedIn, GitHub, Twitter/X)
+- Profile image upload (JPG/PNG/WEBP, max 2MB), old image auto-deleted
+- Resume upload (PDF, max 5MB) — Download Resume button on live portfolio
 
 ### Project & Skill Management
 - Full CRUD for Projects, Skills, and Categories
-- Project image upload with auto-delete on replace or project deletion
-- Project Details modal, status badges, technology tags
-- Pagination (6 per page) with search + filter by title, category, status, and technology
+- Project image upload with auto-delete on replace or deletion
+- Search + filter by title, category, status, and technology
+- Pagination (6 per page)
 
 ### Public Portfolio (preview.php)
-- No-login page pulling live data from the database
-- Client-side category filter, validated contact form
-- Social links and Download Resume button in the hero section
+- No-login page pulling live data from database
+- Client-side category filter with animated project cards
+- Image overlay on hover with Live/GitHub buttons
+- Sticky navbar with backdrop blur
+- Animated skill bars on scroll
+- Real AJAX contact form → Messages Inbox
+- Social links + Download Resume in hero section
+- Dark/light mode with floating toggle button
 - Scroll-reveal fade-in animations (respects `prefers-reduced-motion`)
-- Open Graph + Twitter Card meta tags for social link previews
-
-### Accessibility (Week 7)
-- All form inputs have associated `<label for="">` attributes
-- ARIA roles: `role="progressbar"` on skill bars, `aria-label` on all icon-only buttons
-- Semantic navigation: `<nav aria-label="Main navigation">` with `aria-current="page"`
-- Notification bell has dynamic `aria-label` showing unread count
-- Correct heading hierarchy on public portfolio (h1 → h2 → h3)
-- `aria-hidden="true"` on all decorative icons throughout
 
 ## Technology Stack
 
@@ -151,6 +137,8 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 | Backend | PHP 8.3 (procedural), MySQLi with prepared statements |
 | Database | MySQL |
 | Frontend | Bootstrap 5.3, Bootstrap Icons 1.11, vanilla JavaScript |
+| Charts | Chart.js 4.4 |
+| Fonts | Inter (Google Fonts) |
 | Hosting (production) | InfinityFree |
 | Hosting (local) | XAMPP |
 | Editor | Visual Studio Code |
@@ -158,194 +146,120 @@ Built entirely with **plain PHP 8.3, MySQL, and Bootstrap 5** — no frameworks 
 
 ## Database Design
 
-### Entity Relationship Summary
+### Tables (8 total)
 
-```
-users ──< profile
-users ──< skills
-users ──< projects >── categories
-users ──< categories
-users ──< activity_log
-users ──< notifications
-```
+**users** — Authentication  
+**profile** — Personal info, image, resume, social links  
+**skills** — Skill name, proficiency %, category  
+**projects** — Title, description, image, links, technology, status  
+**categories** — Project categories  
+**activity_log** — All tracked user actions  
+**notifications** — Bell icon notifications  
+**messages** — Contact form submissions (Week 8)
 
-### Tables
-
-**users**
-| Column | Type | Notes |
-|---|---|---|
-| id | INT PK AUTO_INCREMENT | |
-| username | VARCHAR(50) UNIQUE | |
-| password | VARCHAR(255) | bcrypt hash |
-| created_at | DATETIME | |
-
-**profile**
+### messages table (Week 8)
 | Column | Type | Notes |
 |---|---|---|
 | id | INT PK AUTO_INCREMENT | |
 | user_id | INT FK → users.id | |
-| full_name | VARCHAR(100) | |
-| job_title | VARCHAR(100) | |
-| email | VARCHAR(100) | |
-| phone | VARCHAR(30) | |
-| location | VARCHAR(100) | |
-| about_text | TEXT | |
-| profile_image | VARCHAR(255) | filename in assets/uploads/ |
-| linkedin_url | VARCHAR(255) | added Week 6 |
-| github_url | VARCHAR(255) | added Week 6 |
-| twitter_url | VARCHAR(255) | added Week 6 |
-| resume_file | VARCHAR(255) | PDF filename, added Week 6 |
-
-**skills**
-| Column | Type | Notes |
-|---|---|---|
-| id | INT PK AUTO_INCREMENT | |
-| user_id | INT FK → users.id | |
-| skill_name | VARCHAR(100) | Indexed |
-| proficiency | INT | 0–100 |
-| category | VARCHAR(100) | Indexed |
-
-**projects**
-| Column | Type | Notes |
-|---|---|---|
-| id | INT PK AUTO_INCREMENT | |
-| user_id | INT FK → users.id | |
-| title | VARCHAR(150) | Indexed |
-| description | TEXT | |
-| category_id | INT FK → categories.id | NULL = Uncategorized |
-| project_link | VARCHAR(255) | |
-| github_link | VARCHAR(255) | |
-| project_image | VARCHAR(255) | filename in assets/uploads/ |
-| technology | VARCHAR(255) | comma-separated, Indexed |
-| status | ENUM('Completed','In Progress','Planned') | |
-| created_at | DATETIME | |
-
-**categories**
-| Column | Type |
-|---|---|
-| id | INT PK AUTO_INCREMENT |
-| user_id | INT FK → users.id |
-| category_name | VARCHAR(100) |
-
-**activity_log**
-| Column | Type | Notes |
-|---|---|---|
-| id | INT PK AUTO_INCREMENT | |
-| user_id | INT FK → users.id | Indexed (with created_at) |
-| activity_type | VARCHAR(50) | e.g. login, project_added |
-| description | VARCHAR(255) | |
-| created_at | DATETIME | |
-
-**notifications**
-| Column | Type | Notes |
-|---|---|---|
-| id | INT PK AUTO_INCREMENT | |
-| user_id | INT FK → users.id | Indexed (with is_read) |
-| message | VARCHAR(255) | |
+| sender_name | VARCHAR(100) | |
+| sender_email | VARCHAR(150) | |
+| message | TEXT | |
 | is_read | TINYINT(1) | 0 = unread |
-| created_at | DATETIME | |
-
-## CRUD Operations Reference
-
-All operations are form-based (POST) with prepared statements. There are no REST API endpoints — this is a traditional server-rendered PHP application.
-
-| Page | Operation | Method | Action |
-|---|---|---|---|
-| login.php | Authenticate | POST | Verifies bcrypt password, starts session |
-| profile.php | Update info | POST | Updates name, title, email, phone, location, social links |
-| profile.php | Update about | POST | Updates about_text |
-| profile.php | Upload image | POST multipart | Validates + moves file, deletes old |
-| profile.php | Upload resume | POST multipart | Validates PDF, deletes old |
-| profile.php | Change password | POST | Verifies current, hashes new with bcrypt |
-| skills.php | Add skill | POST | Inserts row, logs activity |
-| skills.php | Edit skill | POST | Updates row, logs activity |
-| skills.php | Delete skill | POST | Deletes row, logs activity |
-| projects.php | Add project | POST multipart | Inserts row + optional image upload |
-| projects.php | Edit project | POST multipart | Updates row, replaces image if provided |
-| projects.php | Delete project | POST | Deletes row + image file from disk |
-| projects.php | Add category | POST | Inserts category row |
-| projects.php | Edit category | POST | Updates category name |
-| projects.php | Delete category | POST | Deletes category (projects become Uncategorized) |
-| projects.php | Search/filter | GET | Filters by title, category, status, technology |
-| preview.php | View portfolio | GET | Public read-only, no auth required |
-| notifications_read.php | Mark all read | GET | Sets is_read = 1 for all user notifications |
+| created_at | TIMESTAMP | |
 
 ## Folder Structure
 
 ```
 portfolio_dashboard/
-├── index.php                    # Redirects to dashboard or login
-├── login.php / logout.php
-├── dashboard.php                # Stats, recent projects, activity feed
+├── index.php, login.php, logout.php
+├── dashboard.php                # Stats, charts, completeness bar, activity
 ├── profile.php                  # Personal info, image, resume, password
 ├── skills.php                   # Skills CRUD
 ├── projects.php                 # Projects + categories CRUD, search, pagination
 ├── preview.php                  # Public portfolio (no login required)
-├── notifications_read.php       # Marks all notifications as read
-├── setup.php                    # One-time admin seed (delete after use)
-├── database.sql                 # Fresh-install schema (all weeks included)
-├── migration_week3.sql          # activity_log + technology column
-├── migration_week4.sql          # notifications table
-├── migration_week6.sql          # Social links, resume column, DB indexes
-├── INTEGRATION_TESTING.md       # Full test report
+├── messages.php                 # Messages inbox (Week 8)
+├── contact_submit.php           # AJAX contact form handler (Week 8)
+├── notifications_read.php
+├── setup.php
+├── database.sql                 # Fresh-install schema
+├── migration_week3.sql
+├── migration_week4.sql
+├── migration_week6.sql
+├── migration_week8.sql          # messages table (Week 8)
+├── INTEGRATION_TESTING.md
 ├── includes/
-│   ├── config.php               # Environment-based DB credentials (local fallbacks only in repo)
-│   ├── db.php                   # MySQLi connection
-│   ├── auth.php                 # Session guard (redirects to login if not authenticated)
-│   ├── head.php                 # Shared <head> partial
-│   ├── footer.php               # Shared closing scripts + Bootstrap JS
-│   ├── flash.php                # Auto-dismissing toast messages
-│   ├── empty_state.php          # Reusable "no data yet" UI block
-│   ├── file_helper.php          # deleteUploadedFile() — removes old uploads from disk
-│   ├── sidebar.php              # Admin sidebar navigation
-│   ├── header.php               # Topbar with notification bell
-│   ├── log_activity.php         # Writes to activity_log AND notifications in one call
-│   └── notifications.php        # Notification insertion helper
+│   ├── config.php               # Environment-based DB credentials
+│   ├── db.php, auth.php
+│   ├── head.php                 # Anti-flash dark mode script (Week 8)
+│   ├── footer.php, flash.php
+│   ├── empty_state.php, file_helper.php
+│   ├── sidebar.php              # Messages link + unread badge (Week 8)
+│   ├── header.php               # Dark mode toggle button (Week 8)
+│   ├── log_activity.php, notifications.php
 └── assets/
-    ├── css/style.css            # Admin dashboard styles
-    ├── css/preview.css          # Public portfolio styles + animations
-    ├── js/app.js                # Loading spinner + scroll-reveal (admin)
-    ├── js/preview.js            # Category filter, contact form, scroll-reveal (public)
+    ├── css/style.css            # Full redesign with dark mode tokens (Week 8)
+    ├── css/preview.css          # Full redesign with dark mode tokens (Week 8)
+    ├── js/app.js                # Dark mode toggle + loading spinner (Week 8)
+    ├── js/preview.js            # AJAX contact form + dark mode (Week 8)
     ├── favicon.svg
-    └── uploads/                 # User-uploaded images and PDFs
+    └── uploads/
 ```
 
 ## Installation Guide (Local — XAMPP)
 
-1. Copy the `portfolio_dashboard` folder into your XAMPP `htdocs` directory.
-2. Start Apache and MySQL in XAMPP Control Panel.
-3. Open **phpMyAdmin** and create a database named `portfolio_dashboard`.
-4. Import `database.sql` — this creates all tables with the latest schema (no need to run migrations on a fresh install).
-5. Visit `http://localhost/portfolio_dashboard/setup.php` to seed the admin user.
-6. **Immediately delete `setup.php`** after the first visit.
-7. Log in at `http://localhost/portfolio_dashboard/login.php`.
-8. Change the default password immediately via Profile → Change Password.
-
-> **For existing local databases (upgrading):** Run `migration_week3.sql`, `migration_week4.sql`, and `migration_week6.sql` in order instead of re-importing `database.sql`.
+1. Copy `portfolio_dashboard` folder into XAMPP `htdocs`
+2. Start Apache and MySQL in XAMPP Control Panel
+3. Create database `portfolio_dashboard` in phpMyAdmin
+4. Import `database.sql` then run `migration_week8.sql`
+5. Visit `http://localhost/portfolio_dashboard/setup.php` to seed admin user
+6. **Delete `setup.php` immediately after**
+7. Log in at `http://localhost/portfolio_dashboard/login.php`
+8. Change default password via Profile → Change Password
 
 ## Deployment Guide (Production — InfinityFree)
 
-1. Create a free account at [infinityfree.com](https://infinityfree.com) and add a hosting account.
-2. In the control panel, create a MySQL database and note the **host**, **database name**, **username**, and **password** — these are separate from your InfinityFree account password.
-3. Open **phpMyAdmin** via the control panel, select your database, go to the SQL tab, and import `database.sql`.
-4. Edit `includes/config.php` on the server with your live MySQL credentials. **Never commit this file with real credentials.**
-5. Upload all project files to the `htdocs` folder via File Manager or FTP.
-6. Visit `yoursite.com/setup.php` once to create the admin user, then **delete setup.php immediately**.
-7. Log in and change the default password right away via Profile → Change Password.
-8. Test all flows using `INTEGRATION_TESTING.md` as a checklist.
+1. Create account at [infinityfree.com](https://infinityfree.com)
+2. Create MySQL database and note credentials
+3. Import `database.sql` then run `migration_week8.sql` via phpMyAdmin SQL tab
+4. Edit `includes/config.php` on server with live credentials
+5. Upload all files to `htdocs` via File Manager
+6. Run `setup.php` once then delete it
+7. Test all flows
 
 ## 🔒 Security Notes
 
-- `includes/config.php` in this repository contains only local fallback values. Real production credentials live only on the server and are never committed.
-- `setup.php` must be deleted from the live server after first use — it is not present on the production server.
-- All SQL queries use prepared statements with `bind_param()` — no raw string interpolation anywhere.
-- Uploaded files are validated by extension and size before being moved to `assets/uploads/`.
-- All user-supplied output is escaped with `htmlspecialchars()` before rendering.
-
-## Screenshots
-
-Screenshots covering dashboard, profile management, skills, projects, public portfolio (mobile + desktop), and notifications are included in the LinkedIn post submitted for Week 5/6 evaluation.
+- `config.php` in repo contains only local fallback values — never real credentials
+- All SQL uses prepared statements with `bind_param()` — no raw interpolation
+- Uploaded files validated by extension and size before `move_uploaded_file()`
+- All output escaped with `htmlspecialchars()`
+- `setup.php` must be deleted from live server after first use
 
 ---
 
-*Built by Rifaq Ajmal — BS Computer Science, UET Mardan | Codiora Full Stack Internship 2025*
+## Screenshots
+
+### Login Page
+![Login](screenshots/login.png)
+
+### Dashboard (Light Mode)
+![Dashboard Light](screenshots/dashboard-light.png)
+
+### Dashboard (Dark Mode)
+![Dashboard Dark](screenshots/dashboard-dark.png)
+
+### Projects Management
+![Projects](screenshots/projects.png)
+
+### Messages Inbox
+![Messages](screenshots/messages.png)
+
+### Public Portfolio — Hero
+![Preview Hero](screenshots/preview-hero.png)
+
+### Public Portfolio — Dark Mode
+![Preview Dark](screenshots/preview-dark.png)
+
+---
+
+*Built by Rifaq Ajmal — BS Computer Science, UET Mardan | Codiora Full Stack Internship 2026*
