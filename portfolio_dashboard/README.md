@@ -11,6 +11,7 @@ A full-stack PHP/MySQL admin dashboard for managing a personal developer portfol
 | **Admin Dashboard** | http://rifaqportfolio.gamer.free/login.php |
 | **Public Portfolio** | http://rifaqportfolio.gamer.free/preview.php |
 | **GitHub Repository** | https://github.com/Rifaqajmal/Codiora-Internship |
+| **LinkedIn Post** | https://www.linkedin.com/posts/rifaq-ajmal-4b5a513b3_php-webdevelopment-internship-activity-7488473364362133505-2w4c |
 | **Hosting** | InfinityFree (free PHP + MySQL) |
 
 ## Project Overview
