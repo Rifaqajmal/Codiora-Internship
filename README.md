@@ -1,5 +1,4 @@
 # 🚀 Codiora Full Stack Internship — 2 Months
-
 **Intern:** Rifaq Ajmal | BS Computer Science, UET Mardan, Pakistan  
 **Company:** Codiora | **Duration:** 2 Months (8 Weeks) | **Role:** Full Stack Developer Intern
 
@@ -11,8 +10,7 @@
 |---|---|
 | 🖥️ **Admin Dashboard** | http://rifaqportfolio.gamer.free/login.php |
 | 🌍 **Public Portfolio** | http://rifaqportfolio.gamer.free/preview.php |
-
-> **Login:** admin / admin123
+| 💼 **LinkedIn Post** | https://www.linkedin.com/posts/rifaq-ajmal-4b5a513b3_php-webdevelopment-internship-activity-7488473364362133505-2w4c |
 
 ---
 
